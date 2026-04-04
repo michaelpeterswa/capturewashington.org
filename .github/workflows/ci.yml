@@ -14,6 +14,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
+      - run: bunx prisma generate
       - run: bun run lint
 
   format:
@@ -32,6 +33,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
+      - run: bunx prisma generate
       - run: bun run test
 
   build:
