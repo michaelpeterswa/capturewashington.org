@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum EntryStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum MediaType {
+  PHOTO
+  VIDEO
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+}
+
+model Entry {
+  id           String      @id @default(cuid())
+  title        String      @db.VarChar(200)
+  slug         String      @unique
+  body         String
+  locationName String
+  lat          Float
+  lng          Float
+  capturedAt   DateTime
+  status       EntryStatus @default(DRAFT)
+  deletedAt    DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  createdById  String
+  createdBy    User        @relation(fields: [createdById], references: [id])
+  media        Media[]
+  tags         Tag[]       @relation("EntryTags")
+
+  @@index([status, deletedAt])
+  @@index([capturedAt])
+}
+
+model Media {
+  id        String    @id @default(cuid())
+  entryId   String
+  entry     Entry     @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  r2Key     String    @unique
+  type      MediaType
+  mimeType  String
+  fileSize  Int
+  sortOrder Int       @default(0)
+  createdAt DateTime  @default(now())
+
+  @@index([entryId, sortOrder])
+}
+
+model Tag {
+  id      String  @id @default(cuid())
+  name    String  @unique @db.VarChar(50)
+  entries Entry[] @relation("EntryTags")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  image     String?
+  role      UserRole @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  entries   Entry[]
+}
