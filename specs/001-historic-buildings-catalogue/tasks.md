@@ -28,7 +28,7 @@
 - [x] T002 Configure Vitest + React Testing Library in `vitest.config.ts` and `tests/setup.ts`
 - [x] T003 [P] Configure ESLint + Prettier with zero-warning policy in `eslint.config.mjs` and `.prettierrc`
 - [x] T004 [P] Create design token CSS variables (colors, spacing, typography, shadows, breakpoints) in `src/styles/tokens.css`
-- [x] T005 [P] Create environment variables template in `.env.example` with all required vars (DATABASE_URL, NEXTAUTH_*, GOOGLE_*, R2_*, INITIAL_ADMIN_EMAIL)
+- [x] T005 [P] Create environment variables template in `.env.example` with all required vars (DATABASE*URL, NEXTAUTH*_, GOOGLE\__, R2\_\*, INITIAL_ADMIN_EMAIL)
 - [x] T006 [P] Create shared TypeScript types (Entry, Media, Tag, User, enums) in `src/types/index.ts`
 
 ---

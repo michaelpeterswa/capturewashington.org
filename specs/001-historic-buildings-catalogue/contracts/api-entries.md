@@ -6,12 +6,13 @@ List published entries for the public timeline.
 
 **Query Parameters**:
 
-| Param  | Type   | Default | Description                    |
-|--------|--------|---------|--------------------------------|
+| Param  | Type   | Default | Description                                           |
+| ------ | ------ | ------- | ----------------------------------------------------- |
 | cursor | string | —       | Cursor for pagination (entry ID after which to start) |
-| limit  | number | 20      | Number of entries per page (max 50) |
+| limit  | number | 20      | Number of entries per page (max 50)                   |
 
 **Response 200**:
+
 ```json
 {
   "entries": [
@@ -42,6 +43,7 @@ Create a new entry (admin only).
 **Auth**: Required (role: ADMIN or SUPER_ADMIN)
 
 **Request Body**:
+
 ```json
 {
   "title": "string (required, max 200)",
@@ -55,6 +57,7 @@ Create a new entry (admin only).
 ```
 
 **Response 201**:
+
 ```json
 {
   "id": "string",
@@ -74,6 +77,7 @@ Get a single entry by ID.
 **Auth**: Optional. Unauthenticated requests only see `PUBLISHED` entries. Admins see all statuses.
 
 **Response 200**:
+
 ```json
 {
   "id": "string",
@@ -111,6 +115,7 @@ Update an existing entry (admin only).
 **Auth**: Required (role: ADMIN or SUPER_ADMIN)
 
 **Request Body**: Same fields as POST, all optional (partial update). Additionally:
+
 ```json
 {
   "status": "DRAFT | PUBLISHED | ARCHIVED (optional)"
@@ -130,6 +135,7 @@ Soft-delete an entry (admin only).
 **Auth**: Required (role: ADMIN or SUPER_ADMIN)
 
 **Response 200**:
+
 ```json
 {
   "id": "string",

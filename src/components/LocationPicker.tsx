@@ -26,7 +26,10 @@ export function LocationPicker({
 
       if (!mapRef.current) return;
 
-      const map = L.map(mapRef.current).setView([lat, lng], initialLat ? 14 : 7);
+      const map = L.map(mapRef.current).setView(
+        [lat, lng],
+        initialLat ? 14 : 7,
+      );
       mapInstanceRef.current = map;
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {

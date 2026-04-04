@@ -18,7 +18,9 @@ export async function GET(
   const entry = await prisma.entry.findFirst({
     where: {
       OR: [{ id }, { slug: id }],
-      ...(isAdminUser ? {} : { status: EntryStatus.PUBLISHED, deletedAt: null }),
+      ...(isAdminUser
+        ? {}
+        : { status: EntryStatus.PUBLISHED, deletedAt: null }),
     },
     include: {
       tags: true,
@@ -67,9 +69,25 @@ export async function PUT(
 
   const { id } = await params;
   const body = await request.json();
-  const { title, body: entryBody, locationName, lat, lng, capturedAt, status, tagIds, deletedAt } = body;
+  const {
+    title,
+    body: entryBody,
+    locationName,
+    lat,
+    lng,
+    capturedAt,
+    status,
+    tagIds,
+    deletedAt,
+  } = body;
 
-  const validation = validateEntryFields({ title, body: entryBody, locationName, lat, lng });
+  const validation = validateEntryFields({
+    title,
+    body: entryBody,
+    locationName,
+    lat,
+    lng,
+  });
   if (!validation.valid) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
@@ -82,7 +100,8 @@ export async function PUT(
   if (lng !== undefined) data.lng = lng;
   if (capturedAt !== undefined) data.capturedAt = new Date(capturedAt);
   if (status !== undefined) data.status = status as EntryStatus;
-  if (deletedAt !== undefined) data.deletedAt = deletedAt ? new Date(deletedAt) : null;
+  if (deletedAt !== undefined)
+    data.deletedAt = deletedAt ? new Date(deletedAt) : null;
 
   if (tagIds !== undefined) {
     data.tags = { set: tagIds.map((tagId: string) => ({ id: tagId })) };

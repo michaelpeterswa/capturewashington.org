@@ -15,6 +15,7 @@ avoids offset drift when new entries are published. Server Actions
 or API route for fetching next page keeps data fetching on the server.
 
 **Alternatives considered**:
+
 - `react-infinite-scroll-component` — adds dependency, limited RSC
   compatibility
 - Offset-based pagination — breaks when entries are added/archived
@@ -34,6 +35,7 @@ At <10K entries, GIN index performance is more than adequate.
 PostGIS, which is not available on Neon's free tier.
 
 **Alternatives considered**:
+
 - Algolia/Meilisearch — external dependency, cost, overkill for scale
 - PostGIS — not available on Neon free tier
 - Client-side filtering — doesn't scale, poor UX for combined filters
@@ -52,6 +54,7 @@ server-side before the upload begins. R2's S3-compatible API works
 with `@aws-sdk/client-s3` and `@aws-sdk/s3-request-presigner`.
 
 **Alternatives considered**:
+
 - Server-side proxy upload — risks OOM on 512 MB container with
   concurrent uploads
 - Cloudflare Workers upload handler — adds infrastructure complexity
@@ -70,6 +73,7 @@ Session callback injects role into the JWT, making it available on
 both server and client without extra DB queries per request.
 
 **Alternatives considered**:
+
 - Environment variable allowlist — doesn't support role tiers or
   dynamic user management
 - Separate auth service — overkill for 1–5 admins
@@ -89,6 +93,7 @@ Prisma middleware or a global `$extends` filter can enforce the
 public visibility rule automatically.
 
 **Alternatives considered**:
+
 - Boolean `isPublished` — doesn't support three states
 - Separate `deleted` boolean — timestamp is more informative for
   auditing
@@ -106,6 +111,7 @@ prevents SSR errors and keeps the Leaflet JS out of the initial
 server-rendered bundle.
 
 **Alternatives considered**:
+
 - Supercluster (Mapbox) — heavier dependency, designed for Mapbox GL
 - No clustering — unusable when entries are geographically dense
 
@@ -122,6 +128,7 @@ XSS vectors while preserving standard HTML elements. Caching the
 rendered output avoids re-processing on every request.
 
 **Alternatives considered**:
+
 - MDX — over-engineered for user-authored markdown stored in DB
 - Client-side `react-markdown` — adds to JS bundle, unnecessary since
   content is not interactive
@@ -139,6 +146,7 @@ requiring a uniqueness retry loop. Immutability preserves bookmarks
 and external links.
 
 **Alternatives considered**:
+
 - UUID-only slugs — not human-readable
 - Title-only slugs with retry — race condition risk under concurrent
   creation
@@ -156,6 +164,7 @@ needed, keeping the JS bundle lean. Constitution requires design
 tokens; CSS variables are the simplest compliant approach.
 
 **Alternatives considered**:
+
 - Tailwind CSS — utility-first approach conflicts with explicit token
   mandate; adds build complexity
 - styled-components / Emotion — runtime CSS-in-JS hurts performance
@@ -175,6 +184,7 @@ organized. Neon branching provides isolated test databases without
 local Postgres setup.
 
 **Alternatives considered**:
+
 - Jest — slower, requires more configuration for ESM/TypeScript
 - Playwright for E2E — useful later but not needed for initial TDD
   workflow

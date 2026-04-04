@@ -15,7 +15,7 @@
 - Q: How should the homepage timeline load more entries? → A: Infinite scroll — automatically loads more entries as the visitor scrolls near the bottom.
 - Q: When an admin edits a title, should the URL slug update? → A: Slug never changes — set once at creation, preserving bookmarks and SEO.
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Browse Historic Building Timeline (Priority: P1)
 
@@ -220,7 +220,7 @@ without requiring a full download first.
 - What happens when a search query returns zero results? A helpful
   empty state is shown suggesting the visitor broaden their search.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -282,7 +282,7 @@ without requiring a full download first.
 - **User**: An admin account — email, role (super-admin or admin),
   timestamps. Authenticated via external identity provider.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

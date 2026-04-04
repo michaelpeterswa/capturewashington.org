@@ -12,7 +12,7 @@ start:
 
 # testing
 test:
-    bun test
+    bun run test
 
 test-watch:
     bun run test:watch

@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
 
   const hasMore = entries.length > limit;
   const results = hasMore ? entries.slice(0, limit) : entries;
-  const nextCursor = hasMore ? results[results.length - 1]?.id ?? null : null;
+  const nextCursor = hasMore ? (results[results.length - 1]?.id ?? null) : null;
 
   return NextResponse.json({
     entries: results.map((entry) => ({
@@ -47,9 +47,7 @@ export async function GET(request: NextRequest) {
       lat: entry.lat,
       lng: entry.lng,
       capturedAt: entry.capturedAt.toISOString(),
-      thumbnailUrl: entry.media[0]
-        ? getPublicUrl(entry.media[0].r2Key)
-        : null,
+      thumbnailUrl: entry.media[0] ? getPublicUrl(entry.media[0].r2Key) : null,
       tags: entry.tags.map((t) => ({ id: t.id, name: t.name })),
     })),
     nextCursor,
@@ -63,8 +61,15 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { title, body: entryBody, locationName, lat, lng, capturedAt, tagIds } =
-    body;
+  const {
+    title,
+    body: entryBody,
+    locationName,
+    lat,
+    lng,
+    capturedAt,
+    tagIds,
+  } = body;
 
   const validation = validateEntryFields({
     title,

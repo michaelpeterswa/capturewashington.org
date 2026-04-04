@@ -6,7 +6,5 @@ export async function GET() {
     orderBy: { name: "asc" },
   });
 
-  return NextResponse.json(
-    tags.map((t) => ({ id: t.id, name: t.name })),
-  );
+  return NextResponse.json(tags.map((t) => ({ id: t.id, name: t.name })));
 }

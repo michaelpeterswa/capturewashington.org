@@ -48,9 +48,7 @@ export async function searchEntries(params: SearchParams) {
     where,
     orderBy: [{ capturedAt: "desc" }, { id: "desc" }],
     take: limit + 1,
-    ...(params.cursor
-      ? { cursor: { id: params.cursor }, skip: 1 }
-      : {}),
+    ...(params.cursor ? { cursor: { id: params.cursor }, skip: 1 } : {}),
     include: {
       tags: true,
       media: { orderBy: { sortOrder: "asc" }, take: 1 },
@@ -79,7 +77,7 @@ export async function searchEntries(params: SearchParams) {
 
   const hasMore = results.length > limit;
   const page = hasMore ? results.slice(0, limit) : results;
-  const nextCursor = hasMore ? page[page.length - 1]?.id ?? null : null;
+  const nextCursor = hasMore ? (page[page.length - 1]?.id ?? null) : null;
 
   const mapped: EntryListItem[] = page.map((entry) => ({
     id: entry.id,

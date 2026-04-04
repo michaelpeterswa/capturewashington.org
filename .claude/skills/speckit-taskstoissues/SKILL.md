@@ -10,7 +10,6 @@ user-invocable: true
 disable-model-invocation: true
 ---
 
-
 ## User Input
 
 ```text

@@ -6,19 +6,20 @@ Search and filter published entries.
 
 **Query Parameters**:
 
-| Param    | Type   | Default | Description                           |
-|----------|--------|---------|---------------------------------------|
+| Param    | Type   | Default | Description                             |
+| -------- | ------ | ------- | --------------------------------------- |
 | q        | string | —       | Full-text keyword search (title + body) |
-| tags     | string | —       | Comma-separated tag IDs               |
-| dateFrom | string | —       | ISO 8601 date, inclusive lower bound   |
-| dateTo   | string | —       | ISO 8601 date, inclusive upper bound   |
-| lat      | number | —       | Center latitude for proximity search   |
-| lng      | number | —       | Center longitude for proximity search  |
-| radius   | number | —       | Radius in miles (requires lat + lng)   |
-| cursor   | string | —       | Pagination cursor                      |
-| limit    | number | 20      | Results per page (max 50)             |
+| tags     | string | —       | Comma-separated tag IDs                 |
+| dateFrom | string | —       | ISO 8601 date, inclusive lower bound    |
+| dateTo   | string | —       | ISO 8601 date, inclusive upper bound    |
+| lat      | number | —       | Center latitude for proximity search    |
+| lng      | number | —       | Center longitude for proximity search   |
+| radius   | number | —       | Radius in miles (requires lat + lng)    |
+| cursor   | string | —       | Pagination cursor                       |
+| limit    | number | 20      | Results per page (max 50)               |
 
 **Filter Behavior**:
+
 - All filters are AND-combined
 - `q` uses Postgres `tsquery` with ranking; results ordered by
   relevance when `q` is present, otherwise by `capturedAt DESC`
@@ -29,6 +30,7 @@ Search and filter published entries.
 - Only `PUBLISHED` entries with `deletedAt IS NULL` are searched
 
 **Response 200**:
+
 ```json
 {
   "entries": [

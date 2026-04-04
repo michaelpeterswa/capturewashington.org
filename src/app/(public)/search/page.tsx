@@ -19,8 +19,7 @@ export default async function SearchPage({
   const tags = tagsParam ? tagsParam.split(",") : undefined;
   const dateFrom =
     typeof params.dateFrom === "string" ? params.dateFrom : undefined;
-  const dateTo =
-    typeof params.dateTo === "string" ? params.dateTo : undefined;
+  const dateTo = typeof params.dateTo === "string" ? params.dateTo : undefined;
 
   const hasFilters = q || tags || dateFrom || dateTo;
   const results = hasFilters

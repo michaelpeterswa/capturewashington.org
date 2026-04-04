@@ -8,6 +8,7 @@ session, and CSRF.
 **Provider**: Google OAuth 2.0
 **Callback**: On successful authentication, look up the user's email
 in the `User` table:
+
 - If found and role is set → allow sign-in, inject role into session
 - If found but no role → deny sign-in (revoked user)
 - If not found and email matches `INITIAL_ADMIN_EMAIL` → create User
@@ -15,6 +16,7 @@ in the `User` table:
 - If not found and not initial admin → deny sign-in (uninvited user)
 
 **Session Shape** (extended JWT):
+
 ```json
 {
   "user": {

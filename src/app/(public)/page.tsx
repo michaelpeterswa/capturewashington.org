@@ -28,9 +28,7 @@ export default async function HomePage() {
 
   const hasMore = entries.length > PAGE_SIZE;
   const results = hasMore ? entries.slice(0, PAGE_SIZE) : entries;
-  const nextCursor = hasMore
-    ? results[results.length - 1]?.id ?? null
-    : null;
+  const nextCursor = hasMore ? (results[results.length - 1]?.id ?? null) : null;
 
   const mapped: EntryListItem[] = results.map((entry) => ({
     id: entry.id,

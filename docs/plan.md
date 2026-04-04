@@ -6,17 +6,17 @@ A public-facing Next.js photo and video catalogue of historic buildings in Washi
 
 ## Stack
 
-| Layer | Choice | Notes |
-|---|---|---|
-| Framework | Next.js (App Router) | RSC for public pages, API routes for admin |
-| Hosting | Fly.io | Single containerized service |
-| Auth | NextAuth.js + Google OAuth | Session-gated `/admin` routes |
-| Database | Neon Postgres (serverless) | Free tier, hibernates when idle |
-| ORM | Prisma | Type-safe queries, schema migrations |
-| Media storage | Cloudflare R2 | Zero egress fees behind CF CDN |
-| CDN | Cloudflare | Serves R2 media via custom subdomain |
-| Map | Leaflet + react-leaflet | OSM tiles, no API key required |
-| Markdown | remark + rehype | Server-side render, stored as text in Postgres |
+| Layer         | Choice                     | Notes                                          |
+| ------------- | -------------------------- | ---------------------------------------------- |
+| Framework     | Next.js (App Router)       | RSC for public pages, API routes for admin     |
+| Hosting       | Fly.io                     | Single containerized service                   |
+| Auth          | NextAuth.js + Google OAuth | Session-gated `/admin` routes                  |
+| Database      | Neon Postgres (serverless) | Free tier, hibernates when idle                |
+| ORM           | Prisma                     | Type-safe queries, schema migrations           |
+| Media storage | Cloudflare R2              | Zero egress fees behind CF CDN                 |
+| CDN           | Cloudflare                 | Serves R2 media via custom subdomain           |
+| Map           | Leaflet + react-leaflet    | OSM tiles, no API key required                 |
+| Markdown      | remark + rehype            | Server-side render, stored as text in Postgres |
 
 ---
 
@@ -198,8 +198,12 @@ export const r2 = new S3Client({
 export async function presignUpload(key: string, contentType: string) {
   return getSignedUrl(
     r2,
-    new PutObjectCommand({ Bucket: process.env.R2_BUCKET_NAME, Key: key, ContentType: contentType }),
-    { expiresIn: 900 }
+    new PutObjectCommand({
+      Bucket: process.env.R2_BUCKET_NAME,
+      Key: key,
+      ContentType: contentType,
+    }),
+    { expiresIn: 900 },
   );
 }
 ```
@@ -332,13 +336,13 @@ npm run dev
 
 ## Phase Plan
 
-| Phase | Scope |
-|---|---|
-| 1 | Repo scaffold, Prisma schema, Neon connection, basic auth |
-| 2 | Public timeline page + individual entry page with markdown render |
-| 3 | Admin UI: create/edit entry, location picker on map |
-| 4 | R2 upload flow (presign → direct upload → persist key) |
-| 5 | Full map page (all pins, click-through to entry) |
-| 6 | Dockerfile + fly.toml, deploy to Fly.io |
-| 7 | R2 CDN subdomain, Cache-Control headers, video playback |
-| 8 | Tags, filtering, polish |
+| Phase | Scope                                                             |
+| ----- | ----------------------------------------------------------------- |
+| 1     | Repo scaffold, Prisma schema, Neon connection, basic auth         |
+| 2     | Public timeline page + individual entry page with markdown render |
+| 3     | Admin UI: create/edit entry, location picker on map               |
+| 4     | R2 upload flow (presign → direct upload → persist key)            |
+| 5     | Full map page (all pins, click-through to entry)                  |
+| 6     | Dockerfile + fly.toml, deploy to Fly.io                           |
+| 7     | R2 CDN subdomain, Cache-Control headers, video playback           |
+| 8     | Tags, filtering, polish                                           |

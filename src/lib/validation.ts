@@ -62,7 +62,10 @@ export function validateEntryFields(fields: {
     return { valid: false, error: "Body is required" };
   }
 
-  if (fields.locationName !== undefined && fields.locationName.trim().length === 0) {
+  if (
+    fields.locationName !== undefined &&
+    fields.locationName.trim().length === 0
+  ) {
     return { valid: false, error: "Location name is required" };
   }
 

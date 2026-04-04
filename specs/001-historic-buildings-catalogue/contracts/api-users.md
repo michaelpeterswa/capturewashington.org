@@ -7,6 +7,7 @@ List all admin users.
 **Auth**: Required (role: SUPER_ADMIN)
 
 **Response 200**:
+
 ```json
 {
   "users": [
@@ -32,6 +33,7 @@ Invite a new admin user.
 **Auth**: Required (role: SUPER_ADMIN)
 
 **Request Body**:
+
 ```json
 {
   "email": "string (required, valid email)",
@@ -40,6 +42,7 @@ Invite a new admin user.
 ```
 
 **Response 201**:
+
 ```json
 {
   "id": "string",
@@ -64,6 +67,7 @@ Update a user's role.
 **Auth**: Required (role: SUPER_ADMIN)
 
 **Request Body**:
+
 ```json
 {
   "role": "ADMIN | SUPER_ADMIN (required)"
@@ -85,6 +89,7 @@ Revoke a user's access.
 **Auth**: Required (role: SUPER_ADMIN)
 
 **Response 200**:
+
 ```json
 {
   "id": "string",

@@ -26,18 +26,18 @@ cp .env.example .env.local
 
 Fill in `.env.local`:
 
-| Variable               | Where to get it                          |
-|------------------------|------------------------------------------|
-| `DATABASE_URL`         | Neon dashboard → Connection string       |
-| `NEXTAUTH_URL`         | `http://localhost:3000` for dev           |
-| `NEXTAUTH_SECRET`      | `openssl rand -base64 32`                |
-| `GOOGLE_CLIENT_ID`     | Google Cloud Console → APIs & Services   |
-| `GOOGLE_CLIENT_SECRET` | Same as above                            |
-| `INITIAL_ADMIN_EMAIL`  | Your Google account email                |
-| `R2_ACCOUNT_ID`        | Cloudflare dashboard → R2                |
-| `R2_ACCESS_KEY_ID`     | R2 API token                             |
-| `R2_SECRET_ACCESS_KEY` | R2 API token                             |
-| `R2_BUCKET_NAME`       | Your R2 bucket name                      |
+| Variable               | Where to get it                                            |
+| ---------------------- | ---------------------------------------------------------- |
+| `DATABASE_URL`         | Neon dashboard → Connection string                         |
+| `NEXTAUTH_URL`         | `http://localhost:3000` for dev                            |
+| `NEXTAUTH_SECRET`      | `openssl rand -base64 32`                                  |
+| `GOOGLE_CLIENT_ID`     | Google Cloud Console → APIs & Services                     |
+| `GOOGLE_CLIENT_SECRET` | Same as above                                              |
+| `INITIAL_ADMIN_EMAIL`  | Your Google account email                                  |
+| `R2_ACCOUNT_ID`        | Cloudflare dashboard → R2                                  |
+| `R2_ACCESS_KEY_ID`     | R2 API token                                               |
+| `R2_SECRET_ACCESS_KEY` | R2 API token                                               |
+| `R2_BUCKET_NAME`       | Your R2 bucket name                                        |
 | `R2_PUBLIC_URL`        | CDN subdomain (e.g. `https://media.capturewashington.org`) |
 
 ### 3. Initialize database

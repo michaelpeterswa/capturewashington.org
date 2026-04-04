@@ -106,10 +106,7 @@ export async function DELETE(
   const mediaId = searchParams.get("mediaId");
 
   if (!mediaId) {
-    return NextResponse.json(
-      { error: "mediaId required" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "mediaId required" }, { status: 400 });
   }
 
   await prisma.media.delete({

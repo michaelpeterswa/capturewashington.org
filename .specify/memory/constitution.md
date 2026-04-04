@@ -102,19 +102,19 @@ representative pages:
 
 The following technology decisions are binding for the project:
 
-| Layer           | Technology             | Constraint                          |
-|-----------------|------------------------|-------------------------------------|
-| Framework       | Next.js (App Router)   | MUST use React Server Components    |
-| Language        | TypeScript (strict)    | No plain JS files in `src/`         |
-| ORM             | Prisma                 | MUST be sole database access layer  |
-| Database        | Neon Postgres          | Serverless; no local PG dependency  |
-| Object Storage  | Cloudflare R2          | Upload via presigned URLs only      |
-| CDN             | Cloudflare             | All media served through CDN        |
-| Auth            | NextAuth.js + Google   | Email-allowlist access control      |
-| Maps            | Leaflet + OpenStreetMap| No paid map API keys                |
-| Markdown        | remark + rehype        | Server-side rendering with sanitize |
-| Deployment      | Fly.io (Docker)        | Multi-stage Alpine builds, Node 20  |
-| Testing         | Vitest + Testing Lib   | Co-located test files               |
+| Layer          | Technology              | Constraint                          |
+| -------------- | ----------------------- | ----------------------------------- |
+| Framework      | Next.js (App Router)    | MUST use React Server Components    |
+| Language       | TypeScript (strict)     | No plain JS files in `src/`         |
+| ORM            | Prisma                  | MUST be sole database access layer  |
+| Database       | Neon Postgres           | Serverless; no local PG dependency  |
+| Object Storage | Cloudflare R2           | Upload via presigned URLs only      |
+| CDN            | Cloudflare              | All media served through CDN        |
+| Auth           | NextAuth.js + Google    | Email-allowlist access control      |
+| Maps           | Leaflet + OpenStreetMap | No paid map API keys                |
+| Markdown       | remark + rehype         | Server-side rendering with sanitize |
+| Deployment     | Fly.io (Docker)         | Multi-stage Alpine builds, Node 20  |
+| Testing        | Vitest + Testing Lib    | Co-located test files               |
 
 Adding a new technology or replacing an existing one MUST be proposed
 as a constitution amendment with justification and migration plan.

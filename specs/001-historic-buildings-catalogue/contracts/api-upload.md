@@ -7,6 +7,7 @@ Generate a presigned URL for direct browser-to-R2 upload.
 **Auth**: Required (role: ADMIN or SUPER_ADMIN)
 
 **Request Body**:
+
 ```json
 {
   "filename": "string (required)",
@@ -17,12 +18,14 @@ Generate a presigned URL for direct browser-to-R2 upload.
 ```
 
 **Validation** (performed server-side before generating URL):
+
 - `fileSize` ≤ 52,428,800 (50 MB)
 - `contentType` must be one of: `image/jpeg`, `image/png`,
   `image/webp`, `image/avif`, `video/mp4`, `video/webm`
 - Entry must not already have 20 media items
 
 **Response 200**:
+
 ```json
 {
   "uploadUrl": "string (presigned PUT URL, 15-min expiry)",
@@ -31,6 +34,7 @@ Generate a presigned URL for direct browser-to-R2 upload.
 ```
 
 **Response 400**:
+
 ```json
 {
   "error": "string",
