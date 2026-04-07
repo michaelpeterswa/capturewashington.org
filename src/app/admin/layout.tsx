@@ -1,5 +1,9 @@
 import { redirect } from "next/navigation";
 import { auth, isAdmin, signIn } from "@/lib/auth";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { AdminSidebar } from "@/components/admin-sidebar";
+import { AdminHeader } from "@/components/admin-header";
+import { Button } from "@/components/ui/button";
 
 export default async function AdminLayout({
   children,
@@ -10,24 +14,8 @@ export default async function AdminLayout({
 
   if (!session) {
     return (
-      <main
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "60vh",
-          padding: "var(--space-6)",
-          textAlign: "center",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "var(--text-2xl)",
-            fontWeight: "var(--font-bold)",
-            marginBottom: "var(--space-4)",
-          }}
-        >
+      <main className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
+        <h1 className="font-display text-2xl font-normal mb-4">
           Admin Sign In
         </h1>
         <form
@@ -36,21 +24,7 @@ export default async function AdminLayout({
             await signIn("google", { redirectTo: "/admin" });
           }}
         >
-          <button
-            type="submit"
-            style={{
-              padding: "var(--space-3) var(--space-6)",
-              backgroundColor: "var(--color-primary)",
-              color: "white",
-              border: "none",
-              borderRadius: "var(--radius-md)",
-              fontSize: "var(--text-base)",
-              fontWeight: "var(--font-medium)",
-              cursor: "pointer",
-            }}
-          >
-            Sign in with Google
-          </button>
+          <Button type="submit">Sign in with Google</Button>
         </form>
       </main>
     );
@@ -60,5 +34,19 @@ export default async function AdminLayout({
     redirect("/");
   }
 
-  return <>{children}</>;
+  return (
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 52)",
+        } as React.CSSProperties
+      }
+    >
+      <AdminSidebar />
+      <SidebarInset>
+        <AdminHeader />
+        <div className="flex flex-1 flex-col">{children}</div>
+      </SidebarInset>
+    </SidebarProvider>
+  );
 }

@@ -6,24 +6,11 @@ export function EmptyState({
   message: string;
 }) {
   return (
-    <div
-      style={{
-        textAlign: "center",
-        padding: "var(--space-16) var(--space-6)",
-        color: "var(--color-text-secondary)",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "var(--text-xl)",
-          fontWeight: "var(--font-semibold)",
-          marginBottom: "var(--space-2)",
-          color: "var(--color-text)",
-        }}
-      >
+    <div className="text-center py-20 px-6 text-muted-foreground">
+      <h2 className="font-display text-2xl font-normal italic mb-3 text-foreground">
         {title}
       </h2>
-      <p style={{ fontSize: "var(--text-base)" }}>{message}</p>
+      <p className="text-base max-w-sm mx-auto leading-normal">{message}</p>
     </div>
   );
 }

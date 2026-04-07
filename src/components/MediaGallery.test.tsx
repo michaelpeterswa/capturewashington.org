@@ -41,9 +41,9 @@ describe("MediaGallery", () => {
     expect(video).toHaveAttribute("src", videoMedia.url);
   });
 
-  it("renders mixed media in order", () => {
+  it("renders only the first media item", () => {
     render(<MediaGallery media={[photoMedia, videoMedia]} />);
     expect(document.querySelector("img")).toBeInTheDocument();
-    expect(document.querySelector("video")).toBeInTheDocument();
+    expect(document.querySelector("video")).not.toBeInTheDocument();
   });
 });

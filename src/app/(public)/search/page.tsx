@@ -27,22 +27,8 @@ export default async function SearchPage({
     : null;
 
   return (
-    <main
-      style={{
-        maxWidth: "var(--max-width-content)",
-        margin: "0 auto",
-        padding: "var(--space-6)",
-      }}
-    >
-      <h1
-        style={{
-          fontSize: "var(--text-2xl)",
-          fontWeight: "var(--font-bold)",
-          marginBottom: "var(--space-6)",
-        }}
-      >
-        Search
-      </h1>
+    <main className="max-w-5xl mx-auto px-6 pt-8 pb-12">
+      <h1 className="font-display text-3xl font-normal mb-6">Search</h1>
 
       <SearchBar />
 
@@ -54,13 +40,7 @@ export default async function SearchPage({
       )}
 
       {results && results.entries.length > 0 && (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-            gap: "var(--space-6)",
-          }}
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {results.entries.map((entry) => (
             <EntryCard key={entry.id} entry={entry} />
           ))}
@@ -70,7 +50,7 @@ export default async function SearchPage({
       {!hasFilters && (
         <EmptyState
           title="Search for buildings"
-          message="Enter a keyword above to find historic buildings."
+          message="Enter a keyword above to find historic buildings across Washington."
         />
       )}
     </main>

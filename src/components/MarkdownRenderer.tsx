@@ -9,12 +9,7 @@ export async function MarkdownRenderer({ content }: { content: string }) {
   const html = await renderMarkdown(content);
   return (
     <div
-      className="prose"
-      style={{
-        maxWidth: "var(--max-width-prose)",
-        lineHeight: "var(--leading-relaxed)",
-        fontSize: "var(--text-base)",
-      }}
+      className="prose max-w-prose"
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );
