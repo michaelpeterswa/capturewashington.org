@@ -19,7 +19,10 @@ export function ImageLightbox({
 }) {
   return (
     <Dialog>
-      <DialogTrigger nativeButton={false} render={<div className="cursor-zoom-in" />}>
+      <DialogTrigger
+        nativeButton={false}
+        render={<div className="cursor-zoom-in" />}
+      >
         {children}
       </DialogTrigger>
       <DialogContent
