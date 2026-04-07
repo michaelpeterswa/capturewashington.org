@@ -7,6 +7,8 @@ import { MediaGallery } from "@/components/MediaGallery";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { EntryMap } from "@/components/EntryMap";
 import { EntryStatus } from "@prisma/client";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -58,86 +60,57 @@ export default async function EntryPage({
   });
 
   return (
-    <main
-      style={{
-        maxWidth: "var(--max-width-prose)",
-        margin: "0 auto",
-        padding: "var(--space-6)",
-      }}
-    >
+    <main className="max-w-prose mx-auto px-6 pt-8 pb-16 animate-[fadeIn_0.4s_ease]">
+      {/* Back link */}
       <Link
         href="/"
-        style={{
-          display: "inline-block",
-          marginBottom: "var(--space-4)",
-          color: "var(--color-primary)",
-          textDecoration: "none",
-          fontSize: "var(--text-sm)",
-        }}
+        className="inline-flex items-center gap-2 mb-8 text-muted-foreground text-sm uppercase tracking-wide hover:text-foreground transition-colors"
       >
-        &larr; Back to timeline
+        <span>&larr;</span>
+        Back to timeline
       </Link>
 
-      <h1
-        style={{
-          fontSize: "var(--text-3xl)",
-          fontWeight: "var(--font-bold)",
-          lineHeight: "var(--leading-tight)",
-          marginBottom: "var(--space-2)",
-        }}
-      >
+      {/* Title */}
+      <h1 className="font-display text-4xl font-normal leading-tight tracking-tight mb-4">
         {entry.title}
       </h1>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "var(--space-3)",
-          alignItems: "center",
-          marginBottom: "var(--space-6)",
-          color: "var(--color-text-secondary)",
-          fontSize: "var(--text-sm)",
-          flexWrap: "wrap",
-        }}
-      >
+      {/* Metadata */}
+      <div className="flex gap-3 items-center text-muted-foreground text-sm flex-wrap mb-5">
         <span>{entry.locationName}</span>
-        <span>&middot;</span>
+        <span className="text-border">&middot;</span>
         <time dateTime={entry.capturedAt.toISOString()}>{formattedDate}</time>
       </div>
 
+      {/* Tags */}
       {entry.tags.length > 0 && (
-        <div
-          style={{
-            display: "flex",
-            gap: "var(--space-2)",
-            flexWrap: "wrap",
-            marginBottom: "var(--space-6)",
-          }}
-        >
+        <div className="flex gap-2 flex-wrap mb-8">
           {entry.tags.map((tag) => (
-            <Link
-              key={tag.id}
-              href={`/search?tags=${tag.id}`}
-              style={{
-                fontSize: "var(--text-sm)",
-                padding: "var(--space-1) var(--space-3)",
-                backgroundColor: "var(--color-primary-light)",
-                color: "var(--color-primary)",
-                borderRadius: "var(--radius-full)",
-                textDecoration: "none",
-              }}
-            >
-              {tag.name}
+            <Link key={tag.id} href={`/search?tags=${tag.id}`}>
+              <Badge
+                variant="secondary"
+                className="hover:bg-primary/10 hover:text-primary transition-colors"
+              >
+                {tag.name}
+              </Badge>
             </Link>
           ))}
         </div>
       )}
 
+      <Separator className="mb-8" />
+
+      {/* Media */}
       <MediaGallery media={media} />
 
+      {/* Body */}
       <MarkdownRenderer content={entry.body} />
 
-      <div style={{ marginTop: "var(--space-8)" }}>
+      {/* Map */}
+      <div className="mt-10 pt-8 border-t border-border">
+        <h2 className="font-display text-xl font-normal mb-4 text-muted-foreground">
+          Location
+        </h2>
         <EntryMap lat={entry.lat} lng={entry.lng} title={entry.title} />
       </div>
     </main>

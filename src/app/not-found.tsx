@@ -1,48 +1,17 @@
 import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
-    <main
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "60vh",
-        padding: "var(--space-6)",
-        textAlign: "center",
-      }}
-    >
-      <h1
-        style={{
-          fontSize: "var(--text-4xl)",
-          fontWeight: "var(--font-bold)",
-          marginBottom: "var(--space-2)",
-        }}
-      >
+    <main className="flex flex-col items-center justify-center min-h-[70vh] px-6 text-center">
+      <p className="font-display text-[8rem] font-normal italic leading-none text-border tracking-tighter mb-4">
         404
-      </h1>
-      <p
-        style={{
-          fontSize: "var(--text-lg)",
-          color: "var(--color-text-secondary)",
-          marginBottom: "var(--space-6)",
-        }}
-      >
-        This page could not be found.
       </p>
-      <Link
-        href="/"
-        style={{
-          padding: "var(--space-2) var(--space-6)",
-          backgroundColor: "var(--color-primary)",
-          color: "white",
-          borderRadius: "var(--radius-md)",
-          textDecoration: "none",
-          fontSize: "var(--text-base)",
-          fontWeight: "var(--font-medium)",
-        }}
-      >
+      <h1 className="font-display text-2xl font-normal mb-2">Page not found</h1>
+      <p className="text-base text-muted-foreground mb-8 max-w-xs leading-normal">
+        The building you&apos;re looking for may have been moved or demolished.
+      </p>
+      <Link href="/" className={buttonVariants()}>
         Back to Timeline
       </Link>
     </main>

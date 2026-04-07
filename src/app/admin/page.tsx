@@ -1,126 +1,126 @@
 export const dynamic = "force-dynamic";
 
+import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { StatusBadge } from "@/components/StatusBadge";
-import { EntryStatus } from "@/types";
-import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PlusCircleIcon } from "lucide-react";
 
-export default async function AdminDashboard() {
+export default async function AdminDashboardPage() {
   const entries = await prisma.entry.findMany({
     where: { deletedAt: null },
     orderBy: { updatedAt: "desc" },
-    include: { media: { take: 1 } },
+    include: { media: { orderBy: { sortOrder: "asc" }, take: 1 } },
   });
 
+  const published = entries.filter((e) => e.status === "PUBLISHED").length;
+  const drafts = entries.filter((e) => e.status === "DRAFT").length;
+
   return (
-    <main
-      style={{
-        maxWidth: "var(--max-width-content)",
-        margin: "0 auto",
-        padding: "var(--space-6)",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "var(--space-6)",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "var(--text-2xl)",
-            fontWeight: "var(--font-bold)",
-          }}
-        >
-          Admin Dashboard
-        </h1>
-        <Link
-          href="/admin/new"
-          style={{
-            padding: "var(--space-2) var(--space-4)",
-            backgroundColor: "var(--color-primary)",
-            color: "white",
-            borderRadius: "var(--radius-md)",
-            textDecoration: "none",
-            fontSize: "var(--text-sm)",
-            fontWeight: "var(--font-medium)",
-          }}
-        >
-          + New Entry
-        </Link>
+    <div className="p-4 lg:p-6 space-y-6">
+      {/* Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Entries
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-semibold">{entries.length}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Published
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-semibold">{published}</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Drafts
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-semibold">{drafts}</p>
+          </CardContent>
+        </Card>
       </div>
 
-      {entries.length === 0 ? (
-        <p style={{ color: "var(--color-text-muted)" }}>
-          No entries yet. Create your first one.
-        </p>
-      ) : (
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            fontSize: "var(--text-sm)",
-          }}
-        >
-          <thead>
-            <tr
-              style={{
-                borderBottom: "2px solid var(--color-border)",
-                textAlign: "left",
-              }}
-            >
-              <th style={{ padding: "var(--space-2) var(--space-3)" }}>
-                Title
-              </th>
-              <th style={{ padding: "var(--space-2) var(--space-3)" }}>
-                Status
-              </th>
-              <th style={{ padding: "var(--space-2) var(--space-3)" }}>
-                Updated
-              </th>
-              <th style={{ padding: "var(--space-2) var(--space-3)" }}>
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {entries.map((entry) => (
-              <tr
-                key={entry.id}
-                style={{
-                  borderBottom: "1px solid var(--color-border)",
-                }}
-              >
-                <td style={{ padding: "var(--space-3)" }}>{entry.title}</td>
-                <td style={{ padding: "var(--space-3)" }}>
-                  <StatusBadge status={entry.status as EntryStatus} />
-                </td>
-                <td
-                  style={{
-                    padding: "var(--space-3)",
-                    color: "var(--color-text-muted)",
-                  }}
-                >
-                  {entry.updatedAt.toLocaleDateString()}
-                </td>
-                <td style={{ padding: "var(--space-3)" }}>
-                  <Link
-                    href={`/admin/entry/${entry.id}/edit`}
-                    style={{
-                      color: "var(--color-primary)",
-                      textDecoration: "none",
-                    }}
+      {/* Entries table */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Entries</CardTitle>
+          <Link href="/admin/new" className={buttonVariants({ size: "sm" })}>
+            <PlusCircleIcon className="size-4 mr-1" />
+            New Entry
+          </Link>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Title</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Updated</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {entries.length === 0 && (
+                <TableRow>
+                  <TableCell
+                    colSpan={4}
+                    className="text-center text-muted-foreground py-8"
                   >
-                    Edit
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </main>
+                    No entries yet. Create your first one!
+                  </TableCell>
+                </TableRow>
+              )}
+              {entries.map((entry) => (
+                <TableRow key={entry.id}>
+                  <TableCell className="font-medium">{entry.title}</TableCell>
+                  <TableCell>
+                    <StatusBadge status={entry.status} />
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {new Date(entry.updatedAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Link
+                      href={`/admin/entry/${entry.id}/edit`}
+                      className={buttonVariants({
+                        variant: "ghost",
+                        size: "sm",
+                      })}
+                    >
+                      Edit
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

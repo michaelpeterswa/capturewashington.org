@@ -41,6 +41,8 @@ export async function searchEntries(params: SearchParams) {
     where.OR = [
       { title: { contains: params.q, mode: "insensitive" } },
       { body: { contains: params.q, mode: "insensitive" } },
+      { locationName: { contains: params.q, mode: "insensitive" } },
+      { tags: { some: { name: { contains: params.q, mode: "insensitive" } } } },
     ];
   }
 

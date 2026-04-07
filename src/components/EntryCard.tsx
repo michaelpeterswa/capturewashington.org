@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 import type { EntryListItem } from "@/types";
 
 export function EntryCard({ entry }: { entry: EntryListItem }) {
@@ -11,104 +12,55 @@ export function EntryCard({ entry }: { entry: EntryListItem }) {
   return (
     <Link
       href={`/entry/${entry.slug}`}
-      style={{
-        display: "block",
-        textDecoration: "none",
-        color: "inherit",
-        borderRadius: "var(--radius-lg)",
-        overflow: "hidden",
-        backgroundColor: "var(--color-surface)",
-        boxShadow: "var(--shadow-sm)",
-        transition: "box-shadow var(--transition-base)",
-        border: "1px solid var(--color-border)",
-      }}
+      className="group block w-full rounded-lg overflow-hidden bg-card border border-border/50 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
     >
-      <div
-        style={{
-          aspectRatio: "16/9",
-          backgroundColor: "var(--color-bg-alt)",
-          overflow: "hidden",
-        }}
-      >
+      <div className="bg-muted overflow-hidden">
         {entry.thumbnailUrl ? (
           <img
             src={entry.thumbnailUrl}
             alt={entry.title}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
+            className="w-full h-auto block transition-transform duration-600 group-hover:scale-[1.02]"
             loading="lazy"
           />
         ) : (
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "var(--color-text-muted)",
-              fontSize: "var(--text-sm)",
-            }}
-            aria-label="No image available"
-          >
-            No image
+          <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 21h18" />
+              <path d="M5 21V7l8-4v18" />
+              <path d="M19 21V11l-6-4" />
+              <path d="M9 9v.01" />
+              <path d="M9 12v.01" />
+              <path d="M9 15v.01" />
+              <path d="M9 18v.01" />
+            </svg>
+            <span className="text-sm">No image</span>
           </div>
         )}
       </div>
-      <div style={{ padding: "var(--space-4)" }}>
-        <h2
-          style={{
-            fontSize: "var(--text-lg)",
-            fontWeight: "var(--font-semibold)",
-            lineHeight: "var(--leading-tight)",
-            marginBottom: "var(--space-1)",
-          }}
-        >
+      <div className="p-5">
+        <h2 className="font-display text-2xl font-normal leading-snug mb-2">
           {entry.title}
         </h2>
-        <p
-          style={{
-            fontSize: "var(--text-sm)",
-            color: "var(--color-text-secondary)",
-            marginBottom: "var(--space-1)",
-          }}
-        >
-          {entry.locationName}
-        </p>
-        <time
-          dateTime={entry.capturedAt}
-          style={{
-            fontSize: "var(--text-xs)",
-            color: "var(--color-text-muted)",
-          }}
-        >
-          {formattedDate}
-        </time>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+          <span>{entry.locationName}</span>
+          <span className="text-border">&middot;</span>
+          <time dateTime={entry.capturedAt}>{formattedDate}</time>
+        </div>
         {entry.tags.length > 0 && (
-          <div
-            style={{
-              display: "flex",
-              gap: "var(--space-1)",
-              flexWrap: "wrap",
-              marginTop: "var(--space-2)",
-            }}
-          >
+          <div className="flex gap-1 flex-wrap mt-3">
             {entry.tags.map((tag) => (
-              <span
-                key={tag.id}
-                style={{
-                  fontSize: "var(--text-xs)",
-                  padding: "2px var(--space-2)",
-                  backgroundColor: "var(--color-primary-light)",
-                  color: "var(--color-primary)",
-                  borderRadius: "var(--radius-full)",
-                }}
-              >
+              <Badge key={tag.id} variant="secondary" className="text-xs">
                 {tag.name}
-              </span>
+              </Badge>
             ))}
           </div>
         )}

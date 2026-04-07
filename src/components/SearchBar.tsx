@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export function SearchBar() {
   const router = useRouter();
@@ -16,42 +18,15 @@ export function SearchBar() {
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{
-        display: "flex",
-        gap: "var(--space-2)",
-        marginBottom: "var(--space-6)",
-      }}
-    >
-      <input
+    <form onSubmit={handleSubmit} className="flex gap-2 mb-8">
+      <Input
         type="search"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search historic buildings..."
-        style={{
-          flex: 1,
-          padding: "var(--space-2) var(--space-4)",
-          border: "1px solid var(--color-border)",
-          borderRadius: "var(--radius-md)",
-          fontSize: "var(--text-base)",
-        }}
+        placeholder="Search by name, location, or keyword..."
+        className="flex-1"
       />
-      <button
-        type="submit"
-        style={{
-          padding: "var(--space-2) var(--space-4)",
-          backgroundColor: "var(--color-primary)",
-          color: "white",
-          border: "none",
-          borderRadius: "var(--radius-md)",
-          cursor: "pointer",
-          fontSize: "var(--text-base)",
-          fontWeight: "var(--font-medium)",
-        }}
-      >
-        Search
-      </button>
+      <Button type="submit">Search</Button>
     </form>
   );
 }

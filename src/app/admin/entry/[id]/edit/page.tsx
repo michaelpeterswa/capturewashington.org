@@ -7,6 +7,21 @@ import { MediaUploader } from "@/components/MediaUploader";
 import { MediaGallery } from "@/components/MediaGallery";
 import { EntryStatus } from "@/types";
 import type { EntryDetail, MediaItem } from "@/types";
+import dynamic from "next/dynamic";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const MarkdownEditor = dynamic(
+  () =>
+    import("@/components/MarkdownEditor").then((m) => ({
+      default: m.MarkdownEditor,
+    })),
+  { ssr: false },
+);
 
 export default function EditEntryPage() {
   const { id } = useParams<{ id: string }>();
@@ -74,238 +89,146 @@ export default function EditEntryPage() {
 
   if (!entry) {
     return (
-      <main style={{ padding: "var(--space-6)", textAlign: "center" }}>
-        Loading...
-      </main>
+      <div className="p-4 lg:p-6 max-w-2xl space-y-4">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-64 w-full" />
+      </div>
     );
   }
 
-  const fieldStyle = {
-    width: "100%",
-    padding: "var(--space-2) var(--space-3)",
-    border: "1px solid var(--color-border)",
-    borderRadius: "var(--radius-md)",
-    fontSize: "var(--text-base)",
-    fontFamily: "inherit",
-  };
-
-  const labelStyle = {
-    display: "block" as const,
-    marginBottom: "var(--space-1)",
-    fontSize: "var(--text-sm)",
-    fontWeight: "var(--font-medium)" as const,
-  };
-
-  const btnStyle = {
-    padding: "var(--space-1) var(--space-3)",
-    border: "1px solid var(--color-border)",
-    borderRadius: "var(--radius-md)",
-    fontSize: "var(--text-xs)",
-    cursor: "pointer" as const,
-    backgroundColor: "var(--color-surface)",
-  };
-
   return (
-    <main
-      style={{
-        maxWidth: "var(--max-width-prose)",
-        margin: "0 auto",
-        padding: "var(--space-6)",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "var(--space-6)",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "var(--text-2xl)",
-            fontWeight: "var(--font-bold)",
-          }}
-        >
-          Edit Entry
-        </h1>
-        <StatusBadge status={entry.status} />
-      </div>
+    <div className="p-4 lg:p-6 max-w-2xl space-y-6">
+      {/* Status & actions */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div className="flex items-center gap-3">
+            <CardTitle>Edit Entry</CardTitle>
+            <StatusBadge status={entry.status} />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleStatusChange(EntryStatus.DRAFT)}
+              disabled={entry.status === EntryStatus.DRAFT}
+            >
+              Set Draft
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleStatusChange(EntryStatus.PUBLISHED)}
+              disabled={entry.status === EntryStatus.PUBLISHED}
+              className="border-primary/30 text-primary hover:bg-primary/10"
+            >
+              Publish
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleStatusChange(EntryStatus.ARCHIVED)}
+              disabled={entry.status === EntryStatus.ARCHIVED}
+            >
+              Archive
+            </Button>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleDelete}
+              className="ml-auto"
+            >
+              Delete
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "var(--space-2)",
-          marginBottom: "var(--space-6)",
-        }}
-      >
-        <button
-          onClick={() => handleStatusChange(EntryStatus.DRAFT)}
-          style={btnStyle}
-          disabled={entry.status === EntryStatus.DRAFT}
-        >
-          Set Draft
-        </button>
-        <button
-          onClick={() => handleStatusChange(EntryStatus.PUBLISHED)}
-          style={{ ...btnStyle, backgroundColor: "var(--color-success-light)" }}
-          disabled={entry.status === EntryStatus.PUBLISHED}
-        >
-          Publish
-        </button>
-        <button
-          onClick={() => handleStatusChange(EntryStatus.ARCHIVED)}
-          style={btnStyle}
-          disabled={entry.status === EntryStatus.ARCHIVED}
-        >
-          Archive
-        </button>
-        <button
-          onClick={handleDelete}
-          style={{
-            ...btnStyle,
-            color: "var(--color-error)",
-            borderColor: "var(--color-error)",
-            marginLeft: "auto",
-          }}
-        >
-          Delete
-        </button>
-      </div>
+      {/* Edit form */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Details</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSave} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                name="title"
+                defaultValue={entry.title}
+                required
+                maxLength={200}
+              />
+            </div>
 
-      <form onSubmit={handleSave}>
-        <div style={{ marginBottom: "var(--space-4)" }}>
-          <label htmlFor="title" style={labelStyle}>
-            Title
-          </label>
-          <input
-            id="title"
-            name="title"
-            defaultValue={entry.title}
-            required
-            maxLength={200}
-            style={fieldStyle}
-          />
-        </div>
+            <div className="space-y-2">
+              <Label>Body (Markdown)</Label>
+              <MarkdownEditor name="body" defaultValue={entry.body} required />
+            </div>
 
-        <div style={{ marginBottom: "var(--space-4)" }}>
-          <label htmlFor="body" style={labelStyle}>
-            Body (Markdown)
-          </label>
-          <textarea
-            id="body"
-            name="body"
-            defaultValue={entry.body}
-            required
-            rows={12}
-            style={{ ...fieldStyle, resize: "vertical" }}
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="locationName">Location Name</Label>
+              <Input
+                id="locationName"
+                name="locationName"
+                defaultValue={entry.locationName}
+                required
+              />
+            </div>
 
-        <div style={{ marginBottom: "var(--space-4)" }}>
-          <label htmlFor="locationName" style={labelStyle}>
-            Location Name
-          </label>
-          <input
-            id="locationName"
-            name="locationName"
-            defaultValue={entry.locationName}
-            required
-            style={fieldStyle}
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="capturedAt">Capture Date</Label>
+              <Input
+                id="capturedAt"
+                name="capturedAt"
+                type="date"
+                defaultValue={entry.capturedAt.split("T")[0]}
+                required
+              />
+            </div>
 
-        <div style={{ marginBottom: "var(--space-4)" }}>
-          <label htmlFor="capturedAt" style={labelStyle}>
-            Capture Date
-          </label>
-          <input
-            id="capturedAt"
-            name="capturedAt"
-            type="date"
-            defaultValue={entry.capturedAt.split("T")[0]}
-            required
-            style={fieldStyle}
-          />
-        </div>
+            {error && <p className="text-sm text-destructive">{error}</p>}
 
-        {error && (
-          <p
-            style={{
-              color: "var(--color-error)",
-              marginBottom: "var(--space-4)",
-              fontSize: "var(--text-sm)",
+            <Button type="submit" disabled={saving}>
+              {saving ? "Saving..." : "Save Changes"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Separator />
+
+      {/* Media */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Media ({media.length}/20)</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <MediaGallery media={media} />
+          <MediaUploader
+            entryId={id}
+            currentCount={media.length}
+            onUploadComplete={(uploaded) => {
+              setMedia((prev) => [
+                ...prev,
+                {
+                  id: uploaded.r2Key,
+                  url: uploaded.r2Key,
+                  type: uploaded.type,
+                  mimeType: uploaded.mimeType,
+                  sortOrder: prev.length,
+                },
+              ]);
             }}
-          >
-            {error}
-          </p>
-        )}
+          />
+        </CardContent>
+      </Card>
 
-        <button
-          type="submit"
-          disabled={saving}
-          style={{
-            padding: "var(--space-2) var(--space-6)",
-            backgroundColor: "var(--color-primary)",
-            color: "white",
-            border: "none",
-            borderRadius: "var(--radius-md)",
-            fontSize: "var(--text-base)",
-            fontWeight: "var(--font-medium)",
-            cursor: saving ? "not-allowed" : "pointer",
-            opacity: saving ? 0.7 : 1,
-          }}
-        >
-          {saving ? "Saving..." : "Save Changes"}
-        </button>
-      </form>
-
-      <hr
-        style={{
-          margin: "var(--space-8) 0",
-          border: "none",
-          borderTop: "1px solid var(--color-border)",
-        }}
-      />
-
-      <h2
-        style={{
-          fontSize: "var(--text-xl)",
-          fontWeight: "var(--font-semibold)",
-          marginBottom: "var(--space-4)",
-        }}
-      >
-        Media ({media.length}/20)
-      </h2>
-
-      <MediaGallery media={media} />
-
-      <MediaUploader
-        entryId={id}
-        currentCount={media.length}
-        onUploadComplete={(uploaded) => {
-          setMedia((prev) => [
-            ...prev,
-            {
-              id: uploaded.r2Key,
-              url: uploaded.r2Key,
-              type: uploaded.type,
-              mimeType: uploaded.mimeType,
-              sortOrder: prev.length,
-            },
-          ]);
-        }}
-      />
-
-      <p
-        style={{
-          fontSize: "var(--text-xs)",
-          color: "var(--color-text-muted)",
-          marginTop: "var(--space-4)",
-        }}
-      >
+      <p className="text-xs text-muted-foreground">
         Slug: {entry.slug} (immutable)
       </p>
-    </main>
+    </div>
   );
 }

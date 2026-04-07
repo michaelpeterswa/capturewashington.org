@@ -1,23 +1,13 @@
-export function Skeleton({
-  width,
-  height,
-  className,
-}: {
-  width?: string;
-  height?: string;
-  className?: string;
-}) {
+import { cn } from "@/lib/utils";
+
+function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
-      className={className}
-      style={{
-        width: width ?? "100%",
-        height: height ?? "1rem",
-        backgroundColor: "var(--color-bg-alt)",
-        borderRadius: "var(--radius-md)",
-        animation: "pulse 2s ease-in-out infinite",
-      }}
-      aria-hidden="true"
+      data-slot="skeleton"
+      className={cn("animate-pulse rounded-md bg-muted", className)}
+      {...props}
     />
   );
 }
+
+export { Skeleton };

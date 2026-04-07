@@ -3,6 +3,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const MarkdownEditor = dynamic(
+  () =>
+    import("@/components/MarkdownEditor").then((m) => ({
+      default: m.MarkdownEditor,
+    })),
+  { ssr: false },
+);
 
 const LocationPicker = dynamic(
   () =>
@@ -61,133 +73,57 @@ export default function NewEntryPage() {
     }
   }
 
-  const fieldStyle = {
-    width: "100%",
-    padding: "var(--space-2) var(--space-3)",
-    border: "1px solid var(--color-border)",
-    borderRadius: "var(--radius-md)",
-    fontSize: "var(--text-base)",
-    fontFamily: "inherit",
-  };
-
-  const labelStyle = {
-    display: "block",
-    marginBottom: "var(--space-1)",
-    fontSize: "var(--text-sm)",
-    fontWeight: "var(--font-medium)" as const,
-  };
-
   return (
-    <main
-      style={{
-        maxWidth: "var(--max-width-prose)",
-        margin: "0 auto",
-        padding: "var(--space-6)",
-      }}
-    >
-      <h1
-        style={{
-          fontSize: "var(--text-2xl)",
-          fontWeight: "var(--font-bold)",
-          marginBottom: "var(--space-6)",
-        }}
-      >
-        New Entry
-      </h1>
+    <div className="p-4 lg:p-6 max-w-2xl">
+      <Card>
+        <CardHeader>
+          <CardTitle>New Entry</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
+              <Input id="title" name="title" required maxLength={200} />
+            </div>
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: "var(--space-4)" }}>
-          <label htmlFor="title" style={labelStyle}>
-            Title
-          </label>
-          <input
-            id="title"
-            name="title"
-            required
-            maxLength={200}
-            style={fieldStyle}
-          />
-        </div>
+            <div className="space-y-2">
+              <Label>Body (Markdown)</Label>
+              <MarkdownEditor name="body" required />
+            </div>
 
-        <div style={{ marginBottom: "var(--space-4)" }}>
-          <label htmlFor="body" style={labelStyle}>
-            Body (Markdown)
-          </label>
-          <textarea
-            id="body"
-            name="body"
-            required
-            rows={12}
-            style={{ ...fieldStyle, resize: "vertical" }}
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="locationName">Location Name</Label>
+              <Input
+                id="locationName"
+                name="locationName"
+                required
+                placeholder="e.g. Spokane, WA"
+              />
+            </div>
 
-        <div style={{ marginBottom: "var(--space-4)" }}>
-          <label htmlFor="locationName" style={labelStyle}>
-            Location Name
-          </label>
-          <input
-            id="locationName"
-            name="locationName"
-            required
-            placeholder="e.g. Spokane, WA"
-            style={fieldStyle}
-          />
-        </div>
+            <div className="space-y-2">
+              <Label>Location (click map)</Label>
+              <LocationPicker
+                onLocationChange={(newLat, newLng) => {
+                  setLat(newLat);
+                  setLng(newLng);
+                }}
+              />
+            </div>
 
-        <div style={{ marginBottom: "var(--space-4)" }}>
-          <label style={labelStyle}>Location (click map)</label>
-          <LocationPicker
-            onLocationChange={(newLat, newLng) => {
-              setLat(newLat);
-              setLng(newLng);
-            }}
-          />
-        </div>
+            <div className="space-y-2">
+              <Label htmlFor="capturedAt">Capture Date</Label>
+              <Input id="capturedAt" name="capturedAt" type="date" required />
+            </div>
 
-        <div style={{ marginBottom: "var(--space-4)" }}>
-          <label htmlFor="capturedAt" style={labelStyle}>
-            Capture Date
-          </label>
-          <input
-            id="capturedAt"
-            name="capturedAt"
-            type="date"
-            required
-            style={fieldStyle}
-          />
-        </div>
+            {error && <p className="text-sm text-destructive">{error}</p>}
 
-        {error && (
-          <p
-            style={{
-              color: "var(--color-error)",
-              marginBottom: "var(--space-4)",
-              fontSize: "var(--text-sm)",
-            }}
-          >
-            {error}
-          </p>
-        )}
-
-        <button
-          type="submit"
-          disabled={saving}
-          style={{
-            padding: "var(--space-2) var(--space-6)",
-            backgroundColor: "var(--color-primary)",
-            color: "white",
-            border: "none",
-            borderRadius: "var(--radius-md)",
-            fontSize: "var(--text-base)",
-            fontWeight: "var(--font-medium)",
-            cursor: saving ? "not-allowed" : "pointer",
-            opacity: saving ? 0.7 : 1,
-          }}
-        >
-          {saving ? "Creating..." : "Create Entry (Draft)"}
-        </button>
-      </form>
-    </main>
+            <Button type="submit" disabled={saving}>
+              {saving ? "Creating..." : "Create Entry (Draft)"}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

@@ -1,41 +1,29 @@
+import { Badge } from "@/components/ui/badge";
 import { EntryStatus } from "@/types";
+import { cn } from "@/lib/utils";
 
-const statusStyles: Record<
-  EntryStatus,
-  { bg: string; color: string; label: string }
-> = {
-  [EntryStatus.DRAFT]: {
-    bg: "var(--color-warning-light)",
-    color: "var(--color-warning)",
-    label: "Draft",
-  },
-  [EntryStatus.PUBLISHED]: {
-    bg: "var(--color-success-light)",
-    color: "var(--color-success)",
-    label: "Published",
-  },
-  [EntryStatus.ARCHIVED]: {
-    bg: "var(--color-bg-alt)",
-    color: "var(--color-text-muted)",
-    label: "Archived",
-  },
-};
+const statusConfig: Record<EntryStatus, { label: string; className: string }> =
+  {
+    [EntryStatus.DRAFT]: {
+      label: "Draft",
+      className:
+        "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400",
+    },
+    [EntryStatus.PUBLISHED]: {
+      label: "Published",
+      className: "bg-primary/10 text-primary",
+    },
+    [EntryStatus.ARCHIVED]: {
+      label: "Archived",
+      className: "bg-muted text-muted-foreground",
+    },
+  };
 
 export function StatusBadge({ status }: { status: EntryStatus }) {
-  const style = statusStyles[status];
+  const config = statusConfig[status];
   return (
-    <span
-      style={{
-        display: "inline-block",
-        padding: "2px var(--space-2)",
-        borderRadius: "var(--radius-full)",
-        fontSize: "var(--text-xs)",
-        fontWeight: "var(--font-medium)",
-        backgroundColor: style.bg,
-        color: style.color,
-      }}
-    >
-      {style.label}
-    </span>
+    <Badge variant="outline" className={cn("font-medium", config.className)}>
+      {config.label}
+    </Badge>
   );
 }

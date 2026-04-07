@@ -15,6 +15,7 @@ export function InfiniteTimeline({
   const [cursor, setCursor] = useState(initialCursor);
   const [loading, setLoading] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const initialCount = useRef(initialEntries.length);
 
   const loadMore = useCallback(async () => {
     if (!cursor || loading) return;
@@ -49,28 +50,31 @@ export function InfiniteTimeline({
 
   return (
     <div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-          gap: "var(--space-6)",
-        }}
-      >
-        {entries.map((entry) => (
-          <EntryCard key={entry.id} entry={entry} />
+      <div className="flex flex-col items-center gap-8">
+        {entries.map((entry, i) => (
+          <div
+            key={entry.id}
+            style={
+              i < initialCount.current
+                ? {
+                    animation:
+                      "cardIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) both",
+                    animationDelay: `${Math.min(i * 55, 650)}ms`,
+                  }
+                : { animation: "fadeIn 0.3s ease both" }
+            }
+          >
+            <EntryCard entry={entry} />
+          </div>
         ))}
       </div>
       {cursor && (
-        <div ref={sentinelRef} style={{ padding: "var(--space-8)" }}>
+        <div ref={sentinelRef} className="py-10 text-center">
           {loading && (
-            <p
-              style={{
-                textAlign: "center",
-                color: "var(--color-text-muted)",
-              }}
-            >
-              Loading more...
-            </p>
+            <div className="inline-flex items-center gap-3 text-muted-foreground text-sm">
+              <div className="h-4 w-4 border-2 border-border border-t-primary rounded-full animate-spin" />
+              Loading more&hellip;
+            </div>
           )}
         </div>
       )}

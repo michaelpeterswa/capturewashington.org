@@ -2,55 +2,38 @@
 
 import type { MediaItem } from "@/types";
 import { MediaType } from "@/types";
+import { ImageLightbox } from "@/components/ImageLightbox";
 
 export function MediaGallery({ media }: { media: MediaItem[] }) {
   if (media.length === 0) return null;
 
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-        gap: "var(--space-3)",
-        marginBottom: "var(--space-6)",
-      }}
-    >
-      {media.map((item) => (
-        <div
-          key={item.id}
-          style={{
-            borderRadius: "var(--radius-md)",
-            overflow: "hidden",
-            backgroundColor: "var(--color-bg-alt)",
-            aspectRatio: item.type === MediaType.VIDEO ? "16/9" : undefined,
-          }}
+  const item = media[0];
+
+  if (item.type === MediaType.VIDEO) {
+    return (
+      <div className="rounded-lg overflow-hidden bg-muted aspect-video mb-8">
+        <video
+          src={item.url}
+          controls
+          preload="metadata"
+          className="w-full h-full"
         >
-          {item.type === MediaType.PHOTO ? (
-            <img
-              src={item.url}
-              alt=""
-              style={{
-                width: "100%",
-                height: "auto",
-                display: "block",
-              }}
-              loading="lazy"
-            />
-          ) : (
-            <video
-              src={item.url}
-              controls
-              preload="metadata"
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            >
-              <track kind="captions" />
-            </video>
-          )}
-        </div>
-      ))}
+          <track kind="captions" />
+        </video>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-8">
+      <ImageLightbox src={item.url} alt="">
+        <img
+          src={item.url}
+          alt=""
+          className="w-full h-auto rounded-lg cursor-zoom-in"
+          loading="lazy"
+        />
+      </ImageLightbox>
     </div>
   );
 }

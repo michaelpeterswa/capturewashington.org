@@ -44,7 +44,7 @@ describe("EntryCard", () => {
   it("shows placeholder when no thumbnail", () => {
     const noThumb = { ...mockEntry, thumbnailUrl: null };
     render(<EntryCard entry={noThumb} />);
-    expect(screen.getByLabelText("No image available")).toBeInTheDocument();
+    expect(screen.getByText("No image")).toBeInTheDocument();
   });
 
   it("renders a formatted date", () => {

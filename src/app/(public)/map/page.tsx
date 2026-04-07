@@ -5,9 +5,8 @@ import { getPublicUrl } from "@/lib/r2";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { EntryStatus } from "@prisma/client";
 import type { EntryListItem } from "@/types";
-import type { Metadata } from "next";
 import { FullMap } from "@/components/FullMap";
-import Link from "next/link";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Map | Capture Washington",
@@ -36,34 +35,7 @@ export default async function MapPage() {
   }));
 
   return (
-    <main style={{ padding: "var(--space-6)" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "var(--space-4)",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "var(--text-2xl)",
-            fontWeight: "var(--font-bold)",
-          }}
-        >
-          Map
-        </h1>
-        <Link
-          href="/"
-          style={{
-            color: "var(--color-primary)",
-            textDecoration: "none",
-            fontSize: "var(--text-sm)",
-          }}
-        >
-          &larr; Timeline
-        </Link>
-      </div>
+    <main className="p-6">
       {mapped.length === 0 ? (
         <EmptyState
           title="No buildings yet"

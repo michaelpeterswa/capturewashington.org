@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+
 export function ErrorState({
   title = "Something went wrong",
   message,
@@ -8,50 +10,13 @@ export function ErrorState({
   retry?: () => void;
 }) {
   return (
-    <div
-      style={{
-        textAlign: "center",
-        padding: "var(--space-16) var(--space-6)",
-        backgroundColor: "var(--color-error-light)",
-        borderRadius: "var(--radius-lg)",
-        border: "1px solid var(--color-error)",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "var(--text-xl)",
-          fontWeight: "var(--font-semibold)",
-          marginBottom: "var(--space-2)",
-          color: "var(--color-error)",
-        }}
-      >
-        {title}
-      </h2>
-      <p
-        style={{
-          fontSize: "var(--text-base)",
-          color: "var(--color-text-secondary)",
-          marginBottom: retry ? "var(--space-4)" : undefined,
-        }}
-      >
-        {message}
-      </p>
+    <div className="text-center py-16 px-6 bg-destructive/10 rounded-lg border border-destructive/20">
+      <h2 className="text-xl font-semibold mb-2 text-destructive">{title}</h2>
+      <p className="text-base text-muted-foreground mb-4">{message}</p>
       {retry && (
-        <button
-          onClick={retry}
-          style={{
-            padding: "var(--space-2) var(--space-4)",
-            backgroundColor: "var(--color-error)",
-            color: "white",
-            border: "none",
-            borderRadius: "var(--radius-md)",
-            cursor: "pointer",
-            fontSize: "var(--text-sm)",
-            fontWeight: "var(--font-medium)",
-          }}
-        >
+        <Button variant="destructive" size="sm" onClick={retry}>
           Try again
-        </button>
+        </Button>
       )}
     </div>
   );
