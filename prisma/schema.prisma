@@ -23,6 +23,17 @@ enum UserRole {
   ADMIN
 }
 
+enum SocialPlatform {
+  BLUESKY
+  INSTAGRAM
+}
+
+enum SocialPostStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
 model Entry {
   id           String      @id @default(cuid())
   title        String      @db.VarChar(200)
@@ -40,21 +51,33 @@ model Entry {
   createdBy    User        @relation(fields: [createdById], references: [id])
   media        Media[]
   tags         Tag[]       @relation("EntryTags")
+  socialPosts  SocialPost[]
 
   @@index([status, deletedAt])
   @@index([capturedAt])
 }
 
 model Media {
-  id        String    @id @default(cuid())
-  entryId   String
-  entry     Entry     @relation(fields: [entryId], references: [id], onDelete: Cascade)
-  r2Key     String    @unique
-  type      MediaType
-  mimeType  String
-  fileSize  Int
-  sortOrder Int       @default(0)
-  createdAt DateTime  @default(now())
+  id           String    @id @default(cuid())
+  entryId      String
+  entry        Entry     @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  r2Key        String    @unique
+  type         MediaType
+  mimeType     String
+  fileSize     Int
+  sortOrder    Int       @default(0)
+  createdAt    DateTime  @default(now())
+
+  // EXIF metadata
+  cameraMake   String?
+  cameraModel  String?
+  lensModel    String?
+  focalLength  Float?
+  aperture     Float?
+  shutterSpeed String?
+  iso          Int?
+  whiteBalance String?
+  software     String?
 
   @@index([entryId, sortOrder])
 }
@@ -74,4 +97,21 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   entries   Entry[]
+}
+
+model SocialPost {
+  id           String           @id @default(cuid())
+  entryId      String
+  entry        Entry            @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  platform     SocialPlatform
+  status       SocialPostStatus @default(PENDING)
+  externalUrl  String?
+  externalId   String?
+  errorMessage String?
+  postedAt     DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@unique([entryId, platform])
+  @@index([entryId])
 }

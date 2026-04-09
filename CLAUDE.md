@@ -6,6 +6,9 @@ This project uses **Bun** as its package manager and runtime. Do not use npm, ya
 
 ## Active Technologies
 
+- TypeScript 5.x (strict mode) + Next.js 16 (App Router), Prisma 6, existing R2/CDN stack (002-social-media-posting)
+- Neon Postgres (new SocialPost table), Cloudflare R2 (existing images) (002-social-media-posting)
+
 - TypeScript 5.x (strict mode enabled) + Next.js 14+ (App Router), Prisma, NextAuth.js, Leaflet + react-leaflet, remark + rehype, @aws-sdk/client-s3 (001-historic-buildings-catalogue)
 - Neon Postgres (serverless) + Cloudflare R2 (S3-compatible object storage) (001-historic-buildings-catalogue)
 

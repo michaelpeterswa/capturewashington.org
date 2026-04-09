@@ -22,12 +22,25 @@ export interface EntryDetail extends EntryListItem {
   media: MediaItem[];
 }
 
+export interface ExifData {
+  cameraMake?: string | null;
+  cameraModel?: string | null;
+  lensModel?: string | null;
+  focalLength?: number | null;
+  aperture?: number | null;
+  shutterSpeed?: string | null;
+  iso?: number | null;
+  whiteBalance?: string | null;
+  software?: string | null;
+}
+
 export interface MediaItem {
   id: string;
   url: string;
   type: MediaType;
   mimeType: string;
   sortOrder: number;
+  exif?: ExifData | null;
 }
 
 export interface TagItem {

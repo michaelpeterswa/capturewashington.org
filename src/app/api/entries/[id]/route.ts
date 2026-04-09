@@ -6,6 +6,7 @@ import { EntryStatus } from "@prisma/client";
 import { auth } from "@/lib/auth";
 import { isAdmin } from "@/lib/auth-helpers";
 import { validateEntryFields } from "@/lib/validation";
+import { shouldCrossPost, triggerCrossPost } from "@/lib/social/cross-post";
 
 export async function GET(
   _request: NextRequest,
@@ -25,6 +26,7 @@ export async function GET(
     include: {
       tags: true,
       media: { orderBy: { sortOrder: "asc" } },
+      socialPosts: true,
     },
   });
 
@@ -55,6 +57,13 @@ export async function GET(
       sortOrder: m.sortOrder,
     })),
     tags: entry.tags.map((t) => ({ id: t.id, name: t.name })),
+    socialPosts: (entry.socialPosts ?? []).map((sp) => ({
+      platform: sp.platform,
+      status: sp.status,
+      externalUrl: sp.externalUrl,
+      errorMessage: sp.errorMessage,
+      postedAt: sp.postedAt?.toISOString() ?? null,
+    })),
   });
 }
 
@@ -79,6 +88,8 @@ export async function PUT(
     status,
     tagIds,
     deletedAt,
+    postToBluesky: blueskyEnabled,
+    postToInstagram: instagramEnabled,
   } = body;
 
   const validation = validateEntryFields({
@@ -91,6 +102,12 @@ export async function PUT(
   if (!validation.valid) {
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
+
+  // Capture previous status for cross-post trigger
+  const previousEntry = await prisma.entry.findUnique({
+    where: { id },
+    select: { status: true, media: { select: { id: true }, take: 1 } },
+  });
 
   const data: Record<string, unknown> = {};
   if (title !== undefined) data.title = title;
@@ -112,6 +129,21 @@ export async function PUT(
     data,
     include: { tags: true },
   });
+
+  // Trigger cross-posting if entry just became PUBLISHED
+  if (
+    previousEntry &&
+    shouldCrossPost({
+      status: entry.status,
+      previousStatus: previousEntry.status,
+      hasMedia: previousEntry.media.length > 0,
+    })
+  ) {
+    triggerCrossPost(entry.id, {
+      bluesky: blueskyEnabled !== false,
+      instagram: instagramEnabled !== false,
+    });
+  }
 
   return NextResponse.json({
     id: entry.id,
