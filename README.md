@@ -30,6 +30,26 @@ just format        # format with Prettier
 just format-check  # check formatting
 ```
 
+## Social Media Cross-Posting
+
+Entries are automatically cross-posted to Bluesky and Instagram when published (if credentials are configured).
+
+```bash
+# Bluesky — generate an app password at bsky.app/settings/app-passwords
+BLUESKY_HANDLE=yourhandle.bsky.social
+BLUESKY_APP_PASSWORD=xxxx-xxxx-xxxx-xxxx
+
+# Instagram — requires Business/Creator account + Facebook App
+INSTAGRAM_USER_ID=17841400000000000
+INSTAGRAM_ACCESS_TOKEN=IGQ...
+INSTAGRAM_APP_SECRET=your_app_secret
+
+# Site URL for entry links in captions
+SITE_URL=https://capturewashington.org
+```
+
+Cross-post status is visible on the admin edit page with retry for failed posts.
+
 ## Deployment
 
 Merges to `main` trigger CI and auto-deploy to Fly.io via GitHub Actions.

@@ -37,7 +37,7 @@ export async function POST(
 
   const { id } = await params;
   const body = await request.json();
-  const { r2Key, type, mimeType, fileSize } = body;
+  const { r2Key, type, mimeType, fileSize, exif } = body;
 
   const maxSort = await prisma.media.aggregate({
     where: { entryId: id },
@@ -52,6 +52,17 @@ export async function POST(
       mimeType,
       fileSize,
       sortOrder: (maxSort._max.sortOrder ?? -1) + 1,
+      ...(exif && {
+        cameraMake: exif.cameraMake ?? null,
+        cameraModel: exif.cameraModel ?? null,
+        lensModel: exif.lensModel ?? null,
+        focalLength: exif.focalLength ?? null,
+        aperture: exif.aperture ?? null,
+        shutterSpeed: exif.shutterSpeed ?? null,
+        iso: exif.iso ?? null,
+        whiteBalance: exif.whiteBalance ?? null,
+        software: exif.software ?? null,
+      }),
     },
   });
 

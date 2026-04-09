@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -30,6 +31,17 @@ export default function EditEntryPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [media, setMedia] = useState<MediaItem[]>([]);
+  const [postToBluesky, setPostToBluesky] = useState(true);
+  const [postToInstagram, setPostToInstagram] = useState(true);
+  const [socialPosts, setSocialPosts] = useState<
+    Array<{
+      platform: string;
+      status: string;
+      externalUrl: string | null;
+      errorMessage: string | null;
+      postedAt: string | null;
+    }>
+  >([]);
 
   useEffect(() => {
     fetch(`/api/entries/${id}`)
@@ -37,6 +49,7 @@ export default function EditEntryPage() {
       .then((data) => {
         setEntry(data);
         setMedia(data.media || []);
+        setSocialPosts(data.socialPosts || []);
       });
   }, [id]);
 
@@ -76,9 +89,30 @@ export default function EditEntryPage() {
     await fetch(`/api/entries/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({
+        status,
+        postToBluesky: status === EntryStatus.PUBLISHED ? postToBluesky : false,
+        postToInstagram: status === EntryStatus.PUBLISHED ? postToInstagram : false,
+      }),
     });
     setEntry((prev) => (prev ? { ...prev, status } : null));
+  }
+
+  async function handleRetry(platform: string) {
+    const res = await fetch(`/api/entries/${id}/social/retry`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ platform }),
+    });
+    if (res.ok) {
+      setSocialPosts((prev) =>
+        prev.map((sp) =>
+          sp.platform === platform
+            ? { ...sp, status: "PENDING", errorMessage: null }
+            : sp,
+        ),
+      );
+    }
   }
 
   async function handleDelete() {
@@ -107,6 +141,28 @@ export default function EditEntryPage() {
           </div>
         </CardHeader>
         <CardContent>
+          {entry.status !== EntryStatus.PUBLISHED && (
+            <div className="flex items-center gap-4 mb-3 text-sm">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={postToBluesky}
+                  onChange={(e) => setPostToBluesky(e.target.checked)}
+                  className="rounded"
+                />
+                Post to Bluesky
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={postToInstagram}
+                  onChange={(e) => setPostToInstagram(e.target.checked)}
+                  className="rounded"
+                />
+                Post to Instagram
+              </label>
+            </div>
+          )}
           <div className="flex flex-wrap gap-2">
             <Button
               variant="outline"
@@ -144,6 +200,72 @@ export default function EditEntryPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Social post status */}
+      {socialPosts.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Cross-Posts</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {socialPosts.map((sp) => (
+              <div
+                key={sp.platform}
+                className="flex items-center justify-between gap-3"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">
+                    {sp.platform === "BLUESKY" ? "Bluesky" : "Instagram"}
+                  </span>
+                  <Badge
+                    variant={
+                      sp.status === "SUCCESS"
+                        ? "default"
+                        : sp.status === "FAILED"
+                          ? "destructive"
+                          : "secondary"
+                    }
+                  >
+                    {sp.status === "SUCCESS"
+                      ? "Posted"
+                      : sp.status === "FAILED"
+                        ? "Failed"
+                        : "Pending"}
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-2">
+                  {sp.externalUrl && sp.status === "SUCCESS" && (
+                    <a
+                      href={sp.externalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-primary hover:underline"
+                    >
+                      View post &rarr;
+                    </a>
+                  )}
+                  {sp.status === "FAILED" && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleRetry(sp.platform)}
+                    >
+                      Retry
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))}
+            {socialPosts.some(
+              (sp) => sp.status === "FAILED" && sp.errorMessage,
+            ) && (
+              <p className="text-xs text-destructive mt-2">
+                {socialPosts.find((sp) => sp.status === "FAILED")?.errorMessage}
+              </p>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       {/* Edit form */}
       <Card>

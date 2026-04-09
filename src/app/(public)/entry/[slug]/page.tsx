@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getPublicUrl } from "@/lib/r2";
 import { MediaGallery } from "@/components/MediaGallery";
+import { ExifInfo } from "@/components/ExifInfo";
 import { MarkdownRenderer } from "@/components/MarkdownRenderer";
 import { EntryMap } from "@/components/EntryMap";
 import { EntryStatus } from "@prisma/client";
@@ -51,6 +52,17 @@ export default async function EntryPage({
     type: m.type,
     mimeType: m.mimeType,
     sortOrder: m.sortOrder,
+    exif: {
+      cameraMake: m.cameraMake,
+      cameraModel: m.cameraModel,
+      lensModel: m.lensModel,
+      focalLength: m.focalLength,
+      aperture: m.aperture,
+      shutterSpeed: m.shutterSpeed,
+      iso: m.iso,
+      whiteBalance: m.whiteBalance,
+      software: m.software,
+    },
   }));
 
   const formattedDate = new Date(entry.capturedAt).toLocaleDateString("en-US", {
@@ -102,6 +114,9 @@ export default async function EntryPage({
 
       {/* Media */}
       <MediaGallery media={media} />
+
+      {/* EXIF Data */}
+      {media[0]?.exif && <ExifInfo exif={media[0].exif} />}
 
       {/* Body */}
       <MarkdownRenderer content={entry.body} />
