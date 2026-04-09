@@ -92,7 +92,8 @@ export default function EditEntryPage() {
       body: JSON.stringify({
         status,
         postToBluesky: status === EntryStatus.PUBLISHED ? postToBluesky : false,
-        postToInstagram: status === EntryStatus.PUBLISHED ? postToInstagram : false,
+        postToInstagram:
+          status === EntryStatus.PUBLISHED ? postToInstagram : false,
       }),
     });
     setEntry((prev) => (prev ? { ...prev, status } : null));

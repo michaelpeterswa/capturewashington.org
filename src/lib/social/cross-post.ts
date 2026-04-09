@@ -70,7 +70,11 @@ async function executeCrossPost(
   const imageUrl = getPublicUrl(entry.media[0].r2Key);
 
   // Post to Bluesky
-  if (options.bluesky !== false && process.env.BLUESKY_HANDLE && process.env.BLUESKY_APP_PASSWORD) {
+  if (
+    options.bluesky !== false &&
+    process.env.BLUESKY_HANDLE &&
+    process.env.BLUESKY_APP_PASSWORD
+  ) {
     await postToPlatform(entryId, SocialPlatform.BLUESKY, async () => {
       const processed = await fetchAndProcessImage(imageUrl);
       const result = await postToBluesky({
@@ -94,7 +98,11 @@ async function executeCrossPost(
   }
 
   // Post to Instagram
-  if (options.instagram !== false && process.env.INSTAGRAM_USER_ID && process.env.INSTAGRAM_ACCESS_TOKEN) {
+  if (
+    options.instagram !== false &&
+    process.env.INSTAGRAM_USER_ID &&
+    process.env.INSTAGRAM_ACCESS_TOKEN
+  ) {
     await postToPlatform(entryId, SocialPlatform.INSTAGRAM, async () => {
       // Instagram accepts CDN URL directly but needs JPEG
       // Build a caption without the link (Instagram doesn't support clickable links)
