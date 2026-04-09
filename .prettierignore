@@ -4,3 +4,4 @@ dist/
 build/
 coverage/
 bun.lock
+.claude/

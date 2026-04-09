@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Outfit } from "next/font/google";
+import { Fraunces, Alegreya_Sans } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ThemeProvider";
@@ -11,9 +11,10 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
-const outfit = Outfit({
+const alegreyaSans = Alegreya_Sans({
   subsets: ["latin"],
-  variable: "--font-outfit",
+  weight: ["400", "500", "700"],
+  variable: "--font-alegreya-sans",
   display: "swap",
 });
 
@@ -33,7 +34,7 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       data-scroll-behavior="smooth"
-      className={cn(fraunces.variable, outfit.variable)}
+      className={cn(fraunces.variable, alegreyaSans.variable)}
     >
       <body>
         <ThemeProvider>
