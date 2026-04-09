@@ -74,7 +74,12 @@ export function EntryMap({
     <div
       ref={mapRef}
       className="w-full h-[300px] rounded-lg overflow-hidden mb-6 isolate z-0 dark:filter-none"
-      style={{ filter: resolvedTheme === "dark" ? "none" : "sepia(0.25) hue-rotate(-30deg) saturate(0.85) brightness(0.93) contrast(0.95)" }}
+      style={{
+        filter:
+          resolvedTheme === "dark"
+            ? "none"
+            : "sepia(0.25) hue-rotate(-30deg) saturate(0.85) brightness(0.93) contrast(0.95)",
+      }}
       aria-label={`Map showing location of ${title}`}
     />
   );

@@ -6,9 +6,13 @@ const CAMERA_MODEL_NAMES: Record<string, string> = {
   "ILCE-7M4": "a7 IV",
 };
 
-function friendlyCameraName(make: string | null | undefined, model: string | null | undefined): string | null {
+function friendlyCameraName(
+  make: string | null | undefined,
+  model: string | null | undefined,
+): string | null {
   const parts: string[] = [];
-  if (make) parts.push(make.charAt(0).toUpperCase() + make.slice(1).toLowerCase());
+  if (make)
+    parts.push(make.charAt(0).toUpperCase() + make.slice(1).toLowerCase());
   if (model) {
     const friendly = CAMERA_MODEL_NAMES[model];
     parts.push(friendly ? `${friendly} (${model})` : model);
@@ -84,7 +88,9 @@ export function EntryCard({ entry }: { entry: EntryListItem }) {
         </h2>
         <div className="flex items-center gap-3 text-sm text-muted-foreground mb-1">
           <span className="flex items-center gap-1.5">
-            <span className="text-[10px] uppercase tracking-widest text-muted-foreground/60 font-medium">Loc</span>
+            <span className="text-[10px] uppercase tracking-widest text-muted-foreground/60 font-medium">
+              Loc
+            </span>
             {entry.locationName}
           </span>
           <span className="text-accent/40">&middot;</span>

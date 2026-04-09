@@ -17,10 +17,7 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-30 border-t-2 border-accent bg-background/85 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 py-4 flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-        <Link
-          href="/"
-          className="group flex items-center gap-2"
-        >
+        <Link href="/" className="group flex items-center gap-2">
           <span className="font-display text-2xl font-normal text-foreground tracking-tight">
             Capture Washington
           </span>

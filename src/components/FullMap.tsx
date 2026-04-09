@@ -87,7 +87,12 @@ export function FullMap({ entries }: { entries: EntryListItem[] }) {
     <div
       ref={mapRef}
       className="w-full h-[calc(100vh-120px)] rounded-lg overflow-hidden isolate z-0 dark:filter-none"
-      style={{ filter: resolvedTheme === "dark" ? "none" : "sepia(0.25) hue-rotate(-30deg) saturate(0.85) brightness(0.93) contrast(0.95)" }}
+      style={{
+        filter:
+          resolvedTheme === "dark"
+            ? "none"
+            : "sepia(0.25) hue-rotate(-30deg) saturate(0.85) brightness(0.93) contrast(0.95)",
+      }}
       aria-label="Map of historic buildings in Washington state"
     />
   );
