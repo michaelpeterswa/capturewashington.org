@@ -1,65 +1,17 @@
 "use client";
 
 import { useState, useRef } from "react";
-import exifr from "exifr";
 import {
   ACCEPTED_MEDIA_TYPES,
   MAX_FILE_SIZE,
   MAX_FILES_PER_ENTRY,
 } from "@/types";
-import type { ExifData } from "@/types";
 
 interface UploadedMedia {
   r2Key: string;
   type: "PHOTO" | "VIDEO";
   mimeType: string;
   fileSize: number;
-}
-
-function formatShutterSpeed(exposureTime: number): string {
-  if (exposureTime >= 1) return `${exposureTime}s`;
-  return `1/${Math.round(1 / exposureTime)}`;
-}
-
-async function extractExif(file: File): Promise<ExifData | null> {
-  try {
-    const data = await exifr.parse(file, {
-      pick: [
-        "Make",
-        "Model",
-        "LensModel",
-        "FocalLength",
-        "FNumber",
-        "ExposureTime",
-        "ISO",
-        "WhiteBalance",
-        "Software",
-      ],
-    });
-    if (!data) return null;
-    return {
-      cameraMake: data.Make ?? null,
-      cameraModel: data.Model ?? null,
-      lensModel: data.LensModel ?? null,
-      focalLength: data.FocalLength ?? null,
-      aperture: data.FNumber ?? null,
-      shutterSpeed: data.ExposureTime
-        ? formatShutterSpeed(data.ExposureTime)
-        : null,
-      iso: data.ISO ?? null,
-      whiteBalance:
-        data.WhiteBalance === 0
-          ? "Auto"
-          : data.WhiteBalance === 1
-            ? "Manual"
-            : typeof data.WhiteBalance === "string"
-              ? data.WhiteBalance
-              : null,
-      software: data.Software ?? null,
-    };
-  } catch {
-    return null;
-  }
 }
 
 export function MediaUploader({
@@ -100,13 +52,6 @@ export function MediaUploader({
     }
 
     setUploading(true);
-    setProgress("Reading image metadata...");
-
-    let exif: ExifData | null = null;
-    if (file.type.startsWith("image/")) {
-      exif = await extractExif(file);
-    }
-
     setProgress("Getting upload URL...");
 
     try {
@@ -148,7 +93,6 @@ export function MediaUploader({
           type: file.type.startsWith("video/") ? "VIDEO" : "PHOTO",
           mimeType: file.type,
           fileSize: file.size,
-          ...(exif && { exif }),
         }),
       });
 

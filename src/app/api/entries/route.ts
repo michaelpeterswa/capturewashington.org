@@ -39,17 +39,33 @@ export async function GET(request: NextRequest) {
   const nextCursor = hasMore ? (results[results.length - 1]?.id ?? null) : null;
 
   return NextResponse.json({
-    entries: results.map((entry) => ({
-      id: entry.id,
-      title: entry.title,
-      slug: entry.slug,
-      locationName: entry.locationName,
-      lat: entry.lat,
-      lng: entry.lng,
-      capturedAt: entry.capturedAt.toISOString(),
-      thumbnailUrl: entry.media[0] ? getPublicUrl(entry.media[0].r2Key) : null,
-      tags: entry.tags.map((t) => ({ id: t.id, name: t.name })),
-    })),
+    entries: results.map((entry) => {
+      const m = entry.media[0];
+      return {
+        id: entry.id,
+        title: entry.title,
+        slug: entry.slug,
+        locationName: entry.locationName,
+        lat: entry.lat,
+        lng: entry.lng,
+        capturedAt: entry.capturedAt.toISOString(),
+        thumbnailUrl: m ? getPublicUrl(m.r2Key) : null,
+        tags: entry.tags.map((t) => ({ id: t.id, name: t.name })),
+        exif: m
+          ? {
+              cameraMake: m.cameraMake,
+              cameraModel: m.cameraModel,
+              lensModel: m.lensModel,
+              focalLength: m.focalLength,
+              aperture: m.aperture,
+              shutterSpeed: m.shutterSpeed,
+              iso: m.iso,
+              whiteBalance: m.whiteBalance,
+              software: m.software,
+            }
+          : null,
+      };
+    }),
     nextCursor,
   });
 }

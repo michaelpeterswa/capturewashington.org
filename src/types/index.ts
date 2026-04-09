@@ -11,6 +11,7 @@ export interface EntryListItem {
   capturedAt: string;
   thumbnailUrl: string | null;
   tags: TagItem[];
+  exif?: ExifData | null;
 }
 
 export interface EntryDetail extends EntryListItem {

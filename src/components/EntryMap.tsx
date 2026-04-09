@@ -4,11 +4,11 @@ import { useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 
 const TILE_LIGHT =
-  "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+  "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png";
 const TILE_DARK =
-  "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+  "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png";
 const TILE_ATTR =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>';
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://stadiamaps.com/">Stadia Maps</a>';
 
 function pinIcon(L: typeof import("leaflet"), dark: boolean) {
   return L.divIcon({
@@ -73,7 +73,8 @@ export function EntryMap({
   return (
     <div
       ref={mapRef}
-      className="w-full h-[300px] rounded-lg overflow-hidden mb-6 isolate z-0"
+      className="w-full h-[300px] rounded-lg overflow-hidden mb-6 isolate z-0 dark:filter-none"
+      style={{ filter: resolvedTheme === "dark" ? "none" : "sepia(0.25) hue-rotate(-30deg) saturate(0.85) brightness(0.93) contrast(0.95)" }}
       aria-label={`Map showing location of ${title}`}
     />
   );

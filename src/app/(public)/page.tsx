@@ -30,20 +30,36 @@ export default async function HomePage() {
   const results = hasMore ? entries.slice(0, PAGE_SIZE) : entries;
   const nextCursor = hasMore ? (results[results.length - 1]?.id ?? null) : null;
 
-  const mapped: EntryListItem[] = results.map((entry) => ({
-    id: entry.id,
-    title: entry.title,
-    slug: entry.slug,
-    locationName: entry.locationName,
-    lat: entry.lat,
-    lng: entry.lng,
-    capturedAt: entry.capturedAt.toISOString(),
-    thumbnailUrl: entry.media[0] ? getPublicUrl(entry.media[0].r2Key) : null,
-    tags: entry.tags.map((t) => ({ id: t.id, name: t.name })),
-  }));
+  const mapped: EntryListItem[] = results.map((entry) => {
+    const m = entry.media[0];
+    return {
+      id: entry.id,
+      title: entry.title,
+      slug: entry.slug,
+      locationName: entry.locationName,
+      lat: entry.lat,
+      lng: entry.lng,
+      capturedAt: entry.capturedAt.toISOString(),
+      thumbnailUrl: m ? getPublicUrl(m.r2Key) : null,
+      tags: entry.tags.map((t) => ({ id: t.id, name: t.name })),
+      exif: m
+        ? {
+            cameraMake: m.cameraMake,
+            cameraModel: m.cameraModel,
+            lensModel: m.lensModel,
+            focalLength: m.focalLength,
+            aperture: m.aperture,
+            shutterSpeed: m.shutterSpeed,
+            iso: m.iso,
+            whiteBalance: m.whiteBalance,
+            software: m.software,
+          }
+        : null,
+    };
+  });
 
   return (
-    <main className="max-w-3xl xl:max-w-4xl mx-auto px-6 py-10">
+    <main className="max-w-3xl xl:max-w-4xl mx-auto px-4 sm:px-6 py-10">
       {mapped.length === 0 ? (
         <EmptyState
           title="No entries yet"

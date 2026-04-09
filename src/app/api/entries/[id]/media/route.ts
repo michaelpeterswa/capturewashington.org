@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { isAdmin } from "@/lib/auth-helpers";
 import { prisma } from "@/lib/db";
 import { getPublicUrl } from "@/lib/r2";
+import { extractExifFromUrl } from "@/lib/image";
 import { MediaType } from "@prisma/client";
 
 export async function GET(
@@ -37,7 +38,26 @@ export async function POST(
 
   const { id } = await params;
   const body = await request.json();
-  const { r2Key, type, mimeType, fileSize, exif } = body;
+  const { r2Key, type, mimeType, fileSize } = body;
+
+  // Extract EXIF server-side from the uploaded image in R2
+  let exifData: Record<string, unknown> = {};
+  if (mimeType?.startsWith("image/")) {
+    const exif = await extractExifFromUrl(getPublicUrl(r2Key));
+    if (exif) {
+      exifData = {
+        cameraMake: exif.cameraMake,
+        cameraModel: exif.cameraModel,
+        lensModel: exif.lensModel,
+        focalLength: exif.focalLength,
+        aperture: exif.aperture,
+        shutterSpeed: exif.shutterSpeed,
+        iso: exif.iso,
+        whiteBalance: exif.whiteBalance,
+        software: exif.software,
+      };
+    }
+  }
 
   const maxSort = await prisma.media.aggregate({
     where: { entryId: id },
@@ -52,17 +72,7 @@ export async function POST(
       mimeType,
       fileSize,
       sortOrder: (maxSort._max.sortOrder ?? -1) + 1,
-      ...(exif && {
-        cameraMake: exif.cameraMake ?? null,
-        cameraModel: exif.cameraModel ?? null,
-        lensModel: exif.lensModel ?? null,
-        focalLength: exif.focalLength ?? null,
-        aperture: exif.aperture ?? null,
-        shutterSpeed: exif.shutterSpeed ?? null,
-        iso: exif.iso ?? null,
-        whiteBalance: exif.whiteBalance ?? null,
-        software: exif.software ?? null,
-      }),
+      ...exifData,
     },
   });
 
